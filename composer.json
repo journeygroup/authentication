@@ -1,0 +1,17 @@
+{
+    "name": "journey/authentication",
+    "description": "Small but extremely flexible authentication system for micro frameworks with a relatively small number of users.",
+    "keywords": ["authentication","login","user"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4.0",
+        "phpunit/phpunit": "4.6.*",
+        "league/csv": "7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Journey\\": "src",
+            "Journey\\Tests\\": "tests"
+        }
+    }
+}
