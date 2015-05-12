@@ -100,7 +100,8 @@ class Authentication implements Authenticatable
         } else if (is_numeric($level)) {
             return (int) $level;
         } else if (is_string($level)) {
-            if ($level = array_search($level, $this->config['levels'])) {
+            $level = array_search($level, $this->config['levels']);
+            if ($level !== false) {
                 return $level;
             }
         }
@@ -134,7 +135,7 @@ class Authentication implements Authenticatable
      */
     private function is($level)
     {
-        return $this->mapLevel($level) == $level;
+        return $this->mapLevel($level) == $this->user['level'];
     }
 
 

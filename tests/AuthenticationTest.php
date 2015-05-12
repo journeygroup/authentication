@@ -125,4 +125,21 @@ class AuthenticationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(false, Authentication::isAtLeast(3));
         $this->assertEquals(true, Authentication::isAtLeast(2));
     }
+
+
+
+    /**
+     * Tests if the string level mapping for permissions works
+     */
+    public function testLevelMap()
+    {
+        Authentication::config([
+            'levels' => ['un-authenticated', 'user', 'editor']
+        ]);
+
+        $auth = new Authentication();
+        $auth->authenticate('testuser', 'testpassword');
+
+        $this->assertEquals(true, Authentication::is('editor'));
+    }
 }
