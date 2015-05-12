@@ -41,7 +41,7 @@ levels | `null`             | A numeric index of human readable names to assign 
 
 ### User List
 
-The configuration option `users` allows you to provide a list of valid users to authenticate against. All lists require three parameters for each user `username`, `password`, and `level`, where the password a valid hash. The list can be provided though a number of flexible methods:
+The configuration option `users` allows you to provide a list of valid users to authenticate against. All lists require three parameters for each user `username`, `password`, and `level`, where the password is a valid hash. The list can be provided though a number of flexible methods:
 
 #### Array
 
@@ -69,13 +69,13 @@ Journey\Authentication::config([
 
 #### Comma Separated Values
 
-The user list can be provided by as the path to a .csv file. 
+The user list can be provided as a path to a .csv file. 
 
 ```php
 # bootstrap.php
 $users = 'path/to/users.csv';
 
-Journey\Authentication([
+Journey\Authentication::config([
     'users' => $users
 ]);
 ```
@@ -86,7 +86,7 @@ some-username,5f4dcc3b5aa765d61d8327deb882cf99,1
 another-user,48cccca3bab2ad18832233ee8dff1b0b,1
 ```
 
-*Note: because csv files lack keys, it is expected they will be in the order `username`, `password`, `level`. If they don't you may provide a secondary configuration option `columns` which expects an array containing the three required keys in the the order they are used in the csv.*
+*Note: because csv files lack keys, it is expected they will be in the order `username`, `password`, `level`. If they aren't you may provide a secondary configuration option `columns` which expects an array containing the three required keys in the the order they are used in the csv.*
 
 #### Initialization File (.ini)
 
@@ -97,7 +97,7 @@ A user list could also be a simple .ini file.
 # bootstrap.php
 $users = 'path/to/users.ini';
 
-Journey\Authentication([
+Journey\Authentication::config([
     'users' => $users
 ]);
 ```
@@ -115,7 +115,7 @@ level[]    = 1
 
 ### Authenticating Users
 
-Once your users have been configured, actually authenticating users is easy-peasy. There are four frequently used methods `authenticate()`, `restrict()`, `isAtLeast()`, and `is()`. Before a user's permissions can be checked they must be `authenticated` or logged in:
+Once your users have been configured, actually authenticating is easy-peasy. There are four frequently used methods `authenticate()`, `restrict()`, `isAtLeast()`, and `is()`. Before a user's permissions can be checked they must be `authenticated` or logged in:
 
 ```php
 # login.php
