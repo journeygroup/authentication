@@ -116,7 +116,7 @@ level[]    = 1
 
 #### Database
 
-A PDOStatement may also provide the user list. The statement should represent the entire table of users, and of course, the table should contain the columns `username`, `password`, and `level`.
+A PDOStatement may also provide the user list. The statement should represent the entire table of users, and of course, contain the columns `username`, `password`, and `level`.
 
 ```php
 # MyLogic.php
@@ -140,7 +140,7 @@ class MyLogic
 
 #### Authenticatable
 
-The most robust option is to provide an object which implements the [Authenticatable interface](src/Authenticatable.php). This delegates control of the user list to your own external class.
+The most robust option is to provide an object which implements the [Authenticatable interface](src/Authenticatable.php). This delegates control of the user list and user-lookup to your own external class.
 
 ```php
 # MyAuthenticator.php
@@ -172,7 +172,7 @@ Journey\Authentication::config([
 ]);
 ```
 
-**Note: When providing an Authenticatable class rather than a user list, the `salt` and `hash` configuration properties will not be used. It is up to your class to provide the user list, and validate usernames and passwords against it.**
+*Note: When providing an Authenticatable class rather than a user list, the `salt` and `hash` configuration properties will not be used. It is up to your class to provide the user list, and validate usernames and passwords against it.*
 
 
 ### Authenticating Users
@@ -211,4 +211,4 @@ class MySensitiveThings
 
 If the `restrict()` method fails, they application _will_ die to prevent further execution. The configuration option `block` (a Callable) will be called before the die() command is issued (by default `block` contains a redirect to `GET /login`). To check access without killing the application, use `isAtLeast()` or `is()` which only return boolean values.
 
-*Note: All three access control methods cal also accept a level map string from the configuration file like: `Authentication::isAtLeast('editor');`*
+*Note: All three access control methods also accept a level map string from the configuration file like: `Authentication::isAtLeast('editor');`*
