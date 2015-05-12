@@ -4,6 +4,7 @@ namespace Journey\Tests;
 
 use PHPUnit_Framework_TestCase;
 use Journey\Authentication;
+use PDO;
 
 class AuthenticationTest extends PHPUnit_Framework_TestCase
 {
@@ -141,5 +142,38 @@ class AuthenticationTest extends PHPUnit_Framework_TestCase
         $auth->authenticate('testuser', 'testpassword');
 
         $this->assertEquals(true, Authentication::is('editor'));
+    }
+
+
+
+    /**
+     * Tests if using classes that implement Authenticatable work
+     */
+    public function testAuthenticatableClass()
+    {
+        Authentication::config([
+            'users' => new AuthenticatableClass()
+        ], true);
+
+        $auth = new Authentication();
+        $this->assertArrayHasKey('username', $auth->authenticate('testuser', 'testpassword'));
+        $this->assertEquals(true, $auth::is(2));
+    }
+
+
+    /**
+     * Tests a pdo statement as the user list
+     */
+    public function testPDOStatement()
+    {
+        $location = __DIR__ . "/users/users.db";
+        $db = new PDO('sqlite:' . $location);
+        Authentication::config([
+            'users' => $db->query('SELECT * FROM users')
+        ], true);
+
+        $auth = new Authentication();
+        $this->assertArrayHasKey('username', $auth->authenticate('testuser', 'testpassword'));
+        $this->assertEquals(true, $auth::is(2));
     }
 }

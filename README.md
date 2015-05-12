@@ -113,6 +113,68 @@ password[] = 48cccca3bab2ad18832233ee8dff1b0b
 level[]    = 1
 ```
 
+
+#### Database
+
+A PDOStatement may also provide the user list. The statement should represent the entire table of users, and of course, the table should contain the columns `username`, `password`, and `level`.
+
+```php
+# MyLogic.php
+
+use Journey\Authentication;
+use PDO;
+
+class MyLogic
+{
+    public function __construct()
+    {
+        $db = new PDO("sqlite: /path/to/database.db");
+                
+        Authentication::config([
+            'users' => $db->query('SELECT * FROM users')
+        ]);
+    }
+}
+```
+
+
+#### Authenticatable
+
+The most robust option is to provide an object which implements the [Authenticatable interface](src/Authenticatable.php). This delegates control of the user list to your own external class.
+
+```php
+# MyAuthenticator.php
+
+use Journey\Authenticatable;
+
+class MyAuthenticator implements Authenticatable
+{
+    public function authenticate($username, $password)
+    {
+        $users = $this->getUsersHoweverIWant();
+        foreach ($users as $user) {
+            if ($user['username'] == $username && $password == $password) {
+                return $user;   # returned user must be an array containing username, password, and level
+            }
+        }
+        return false;
+    }
+    ...
+}
+```
+
+
+```php
+# bootstrap.php
+
+Journey\Authentication::config([
+    'users' => new MyAuthenticatable()
+]);
+```
+
+**Note: When providing an Authenticatable class rather than a user list, the `salt` and `hash` configuration properties will not be used. It is up to your class to provide the user list, and validate usernames and passwords against it.**
+
+
 ### Authenticating Users
 
 Once your users have been configured, actually authenticating is easy-peasy. There are four frequently used methods `authenticate()`, `restrict()`, `isAtLeast()`, and `is()`. Before a user's permissions can be checked they must be `authenticated` or logged in:

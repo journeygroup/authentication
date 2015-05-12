@@ -66,16 +66,17 @@ class Authentication implements Authenticatable
     public function authenticate($username, $password)
     {
         $config = $this->config;
+        $users = $this->getUsers();
 
         if ($this->authenticatable == $this) {
-            foreach ($this->getUsers() as $user) {
+            foreach ($users as $user) {
                 $hash = $config['hash']($password . $config['salt']);
                 if ($user['username'] == $username && $user['password'] == $hash) {
                     $this->user = $user;
                     break;
                 }
             }
-        } else {
+        } else if ($this->authenticatable instanceof Authenticatable) {
             $this->user = $this->authenticatable->authenticate($username, $password);
         }
 
@@ -205,7 +206,7 @@ class Authentication implements Authenticatable
 
         # If users is a database result, fetch all the results
         } else if ($users instanceof PDOStatement) {
-            $this->users = $this->fetchAll(PDO::FETCH_ASSOC);
+            $this->users = $users->fetchAll(PDO::FETCH_ASSOC);
             return true;
         # If users is an instance of Authenticatable, use that instance
         } else if ($users instanceof Authenticatable) {
