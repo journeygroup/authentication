@@ -155,7 +155,7 @@ class Authentication implements Authenticatable
      */
     private function restrict($level)
     {
-        if ($this->mapLevel($level) >= $this->user['level']) {
+        if ($this->mapLevel($level) > $this->user['level']) {
             $this->config['block']($this);
         }
     }

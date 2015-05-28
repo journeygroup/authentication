@@ -5,6 +5,7 @@ namespace Journey\Tests;
 use PHPUnit_Framework_TestCase;
 use Journey\Authentication;
 use PDO;
+use Exception;
 
 class AuthenticationTest extends PHPUnit_Framework_TestCase
 {
@@ -175,5 +176,34 @@ class AuthenticationTest extends PHPUnit_Framework_TestCase
         $auth = new Authentication();
         $this->assertArrayHasKey('username', $auth->authenticate('testuser', 'testpassword'));
         $this->assertEquals(true, $auth::is(2));
+    }
+
+
+
+    /**
+     * Test an authentication failure and restriction
+     */
+    public function testRestrict()
+    {
+        $location = __DIR__ . "/users/users.db";
+        $db = new PDO('sqlite:' . $location);
+        Authentication::config([
+            'users' => $db->query('SELECT * FROM users')
+        ], true);
+
+        $auth = new Authentication([
+            'block' => function ($auth) {
+                throw new Exception('Access was restricted', 403);
+            }
+        ]);
+
+        $auth->authenticate('testuser', 'testpassword');
+        try {
+            Authentication::restrict(3);
+        } catch (Exception $e) {
+            $this->assertEquals(403, $e->getCode());
+            return true;
+        }
+        $this->fail('Failed to restrict access');
     }
 }
