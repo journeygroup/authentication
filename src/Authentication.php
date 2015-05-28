@@ -28,8 +28,8 @@ class Authentication implements Authenticatable
             static::factory(null, $this);
         }
 
-        if (php_sapi_name() != 'cli' && session_status() == PHP_SESSION_NONE) {
-            session_start();
+        if (php_sapi_name() != 'cli') {
+            static::startSession();
             if (!empty($_SESSION['user'])) {
                 $this->user = $_SESSION['user'];
             }
@@ -44,6 +44,21 @@ class Authentication implements Authenticatable
         if (!$this->authenticatable instanceof Authenticatable) {
             $this->authenticatable = $this;
         }
+    }
+
+
+
+    /**
+     * Starts the session
+     * @return Boolean  returns true if it started the session, and false if it was already started, or failed to start
+     */
+    public static function startSession()
+    {
+        if (php_sapi_name() != 'cli' && session_status() == PHP_SESSION_NONE) {
+            session_start();
+            return true;
+        }
+        return false;
     }
 
 
@@ -92,6 +107,24 @@ class Authentication implements Authenticatable
         }
 
         return (!empty($this->user)) ? $this->user:false;
+    }
+
+
+
+    /**
+     * Revokes authentication access (logout)
+     * @return bool  returns true if the user was logged and is now logged out. Otherwise returns false
+     */
+    public static function unauthenticate()
+    {
+        static::startSession();
+        if (!empty($_SESSION['user']) || !empty($this->user)) {
+            $_SESSION['user'] = null;
+            $this->user = null;
+            return true;
+        }
+
+        return false;
     }
 
 
