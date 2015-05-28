@@ -30,6 +30,9 @@ class Authentication implements Authenticatable
 
         if (php_sapi_name() != 'cli' && session_status() == PHP_SESSION_NONE) {
             session_start();
+            if (!empty($_SESSION['user'])) {
+                $this->user = $_SESSION['user'];
+            }
         }
 
         $this->config = static::config($config);
@@ -81,10 +84,14 @@ class Authentication implements Authenticatable
         }
 
         if ($this->user && php_sapi_name() != 'cli') {
+            if (isset($this->user['password'])) {
+                unset($this->user['password']);
+            }
+
             $_SESSION['user'] = $this->user;
         }
 
-        return ($this->user) ? $this->user:false;
+        return (!empty($this->user)) ? $this->user:false;
     }
 
 
