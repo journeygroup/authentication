@@ -118,9 +118,8 @@ class Authentication implements Authenticatable
     public static function unauthenticate()
     {
         static::startSession();
-        if (!empty($_SESSION['user']) || !empty($this->user)) {
+        if (!empty($_SESSION['user'])) {
             $_SESSION['user'] = null;
-            $this->user = null;
             return true;
         }
 
