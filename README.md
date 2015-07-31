@@ -204,7 +204,7 @@ class MySensitiveThings
 {
     public function __construct()
     {
-        Authenticate::restrict(1);
+        Authentication::restrict(1);
     }
 }
 ```
