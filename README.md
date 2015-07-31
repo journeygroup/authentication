@@ -195,6 +195,8 @@ if ($auth->authenticate($_POST['username'], $_POST['password'])) {
 
 Once a user has been authenticated, a browser session will be set to keep them logged in. On the command line, they will stay authenticated for the remainder of the runtime. After authentication, restricting access only requires a call to `restrict()`.
 
+To logout, or unauthenticated use: `Authentication::unauthenticate();`
+
 ```php
 # sensitive.php
 
