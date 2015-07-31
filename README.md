@@ -13,7 +13,7 @@ Frequently micro frameworks require a small user base, whether for administratio
 
 To add Authentication to your project, just use composer:
 
-    composer require journeygroup/authentication @dev-master
+    composer require journey/authentication dev-master
 
 
 ### Configuration
